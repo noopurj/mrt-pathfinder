@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+Zendesk Frontend Exercise
+=========================
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+You are provided data on the stations and lines of Singapore's urban rail system, including planned additions over the next decade. Your task is to use this data to build a React app to help users find routes from any station to any other station on this future network.
 
-## Available Scripts
+The app should have the following minimal functionality:
+- Allow the user to specify origin and destination stations.
+- Display one or more routes from the origin to the destination, ordered by some efficiency heuristic. Routes should have one or more steps, like "Take <line> from <station> to <station>" or "Change to <line>". You may add other relevant information to the results.
 
-In the project directory, you can run:
+## Data Description
 
-### `yarn start`
+The included file, stations.json, describes Singapore's future rail network. Here is an extract:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+{
+  ...
+  "Bukit Gombak": {"NS": 3},
+  "Bukit Panjang": {"BP": [6, 14], "DT": 1},
+  "Buona Vista": {"EW": 21, "CC": 22, "CE": 22},
+  ...
+}
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The keys of the root JSON object are station names (e.g. Bukit Gombak) and the values specify the position of each station on one or more train lines. For example, Bukit Gombak has position 3 on the "NS" (North-South) line.
 
-### `yarn test`
+Interchange stations like Buona Vista have positions on multiple lines: here it is at position 21 on the EW (East-West) line and 22 on the CC and CE lines.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A few lines form loops: For instance, the Bukit Panjang station has positions 6 and 14 on the BP (Bukit Panjang LRT) line because it closes the loop on that line.
 
-### `yarn build`
+Note that position numbers are not always sequential; the gaps represent spaces left for future stations, and may be ignored for this exercise.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Trains run in both directions on every line.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Submission
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Using create-react-app is recommended but not required. If not using it, all dependencies should be specified in package.json, and instructions for building and serving the app should be included.
 
-### `yarn eject`
+You may zip and upload your code to Google Drive. Please exclude node_modules from the archive.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Evaluation
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Your submission will be judged on:
+- code quality and architecture
+- user experience
+- quality of the route suggestions
