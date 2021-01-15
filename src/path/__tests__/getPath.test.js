@@ -84,4 +84,30 @@ describe("getPath", () => {
       ])
     );
   });
+
+  it("can sort results based on number of stations travelled", () => {
+    expect(getPath("Phoenix", "Changi Airport", STATIONS)).toEqual([
+      [
+        "Phoenix",
+        "Choa Chu Kang",
+        "Jurong East",
+        "Tanah Merah",
+        "Changi Airport",
+      ],
+      [
+        "Phoenix",
+        "Choa Chu Kang",
+        "City Hall",
+        "Tanah Merah",
+        "Changi Airport",
+      ],
+      [
+        "Phoenix",
+        "Choa Chu Kang",
+        "Raffles Place",
+        "Tanah Merah",
+        "Changi Airport",
+      ],
+    ]);
+  });
 });
