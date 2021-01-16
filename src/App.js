@@ -4,21 +4,23 @@ import Form from "./Form";
 import STATIONS from "./stations";
 import Path from "./Path";
 import { Button, Container, Grid } from "semantic-ui-react";
-import { getPath } from "./path/getPath";
 import styled from "styled-components";
+import { createGraph, getShortestPath } from "./path/stationBfs";
 
 const AppWrapper = styled(Container)`
   margin-top: 15px;
 `;
 
+const stationGraph = createGraph(STATIONS);
+
 function App() {
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
-  const [paths, setPaths] = useState([]);
+  const [path, setPath] = useState([]);
 
   const handleClick = () => {
-    const calculated = getPath(origin, destination, STATIONS);
-    setPaths(calculated);
+    const calculated = getShortestPath(stationGraph, origin, destination);
+    setPath(calculated);
   };
 
   return (
@@ -45,7 +47,7 @@ function App() {
           </Grid.Row>
         </Grid.Column>
         <Grid.Column>
-          <Path paths={paths} />
+          <Path path={path} />
         </Grid.Column>
       </Grid>
     </AppWrapper>

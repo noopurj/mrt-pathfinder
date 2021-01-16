@@ -1,56 +1,80 @@
+import { Graph, alg } from "@dagrejs/graphlib";
 import { orderedLines } from "./orderedLines";
-import { bfs } from "./bfs";
 
-function createStationGraph(stations) {
-  const graph = {};
-  const stationsByLines = orderedLines(stations);
-  Object.entries(stationsByLines).forEach(([lineName, stationsForLine]) => {
-    const maxStationNumber = Math.max(
-      ...Object.keys(stationsForLine).map((num) => Number(num))
-    );
-    Object.entries(stationsForLine).forEach(([stationNumber, stationName]) => {
-      const adjacent = graph[stationName] || {};
-      let number = Number(stationNumber) + 1;
-      while (!Object.keys(stationsForLine).includes(String(number))) {
-        number++;
-        if (number > maxStationNumber) {
-          break;
+export function createGraph(stations) {
+  const graph = new Graph({ directed: false, multigraph: true });
+  const orderedStationsByLine = orderedLines(stations);
+  Object.entries(orderedStationsByLine).forEach(
+    ([lineName, stationsForLine]) => {
+      const minStationNumber = Math.min(
+        ...Object.keys(stationsForLine).map((num) => Number(num))
+      );
+      const maxStationNumber = Math.max(
+        ...Object.keys(stationsForLine).map((num) => Number(num))
+      );
+      let currentStationNumber = minStationNumber;
+      while (currentStationNumber < maxStationNumber) {
+        if (
+          Object.keys(stationsForLine).includes(String(currentStationNumber))
+        ) {
+          let nextStationNumber = currentStationNumber + 1;
+          while (
+            !Object.keys(stationsForLine).includes(String(nextStationNumber)) &&
+            nextStationNumber <= maxStationNumber
+          ) {
+            nextStationNumber += 1;
+          }
+          const currentStation = stationsForLine[String(currentStationNumber)];
+          const nextStation = stationsForLine[String(nextStationNumber)];
+          graph.setEdge(currentStation, nextStation, lineName);
+          currentStationNumber = nextStationNumber;
+        } else {
+          currentStationNumber += 1;
         }
       }
-      if (
-        number !== Number(stationNumber) &&
-        Object.keys(stationsForLine).includes(String(number))
-      ) {
-        const adjacentStation = stationsForLine[String(number)];
-        const connectionLines = adjacent[adjacentStation] || [];
-        connectionLines.push(lineName);
-        adjacent[adjacentStation] = connectionLines;
-      }
-      number = Number(stationNumber) - 1;
-      while (!Object.keys(stationsForLine).includes(String(number))) {
-        number--;
-        if (number < 0) {
-          break;
-        }
-      }
-      if (
-        number !== Number(stationNumber) &&
-        Object.keys(stationsForLine).includes(String(number))
-      ) {
-        const adjacentStation = stationsForLine[String(number)];
-        const connectionLines = adjacent[adjacentStation] || [];
-        connectionLines.push(lineName);
-        adjacent[adjacentStation] = connectionLines;
-      }
-      graph[stationName] = adjacent;
-    });
-  });
-  console.log(graph);
+    }
+  );
   return graph;
 }
 
-export function stationBfs(origin, destination, stations) {
-  const adjacencyListStations = createStationGraph(stations);
-  const path = bfs(origin, destination, adjacencyListStations);
-  return path;
+export function getShortestPath(graph, source, destination) {
+  const STATION_NAMES = graph.nodes();
+  if (!STATION_NAMES.includes(source) || !STATION_NAMES.includes(destination)) {
+    throw new Error("Invalid station, cannot calculate path");
+  }
+
+  const edgeFn = (v) => {
+    return graph.nodeEdges(v);
+  };
+  const pathMap = alg.dijkstra(graph, source, () => 1, edgeFn);
+  const stationsTravelled = [];
+  const lineOrder = [];
+  const lineMap = {};
+  let previousStop = destination;
+  while (previousStop !== source) {
+    stationsTravelled.push(previousStop);
+    const line = graph.edge(previousStop, pathMap[previousStop].predecessor);
+    if (!lineOrder.includes(line)) {
+      lineOrder.push(line);
+    }
+    const lineStationList = lineMap[line] || [];
+    lineStationList.unshift(previousStop);
+    previousStop = pathMap[previousStop].predecessor;
+    if (previousStop === source) {
+      lineStationList.unshift(previousStop);
+    }
+    lineMap[line] = lineStationList;
+  }
+  stationsTravelled.push(source);
+  stationsTravelled.reverse();
+  lineOrder.reverse();
+  const stops = [source];
+  lineOrder.forEach((line) => stops.push([...lineMap[line]].pop()));
+  for (let i = 1; i < stops.length - 1; i++) {
+    const previousLineStations = lineMap[lineOrder[i - 1]];
+    const lastStopOfPreviousLine =
+      previousLineStations[previousLineStations.length - 1];
+    lineMap[lineOrder[i]].unshift(lastStopOfPreviousLine);
+  }
+  return { lineMap, lineOrder, stationsTravelled, stops };
 }
