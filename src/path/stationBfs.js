@@ -45,6 +45,11 @@ export function createGraph(stations, lineChangeWeight = 1) {
     }
   );
 
+  setLineChangeWeight(graph, stations, lineChangeWeight);
+  return graph;
+}
+
+export function setLineChangeWeight(graph, stations, lineChangeWeight) {
   Object.entries(stations).forEach(([stationName, lines]) => {
     if (Object.keys(lines).length > 1) {
       Object.keys(lines).forEach((line1) =>
@@ -61,7 +66,6 @@ export function createGraph(stations, lineChangeWeight = 1) {
       );
     }
   });
-  return graph;
 }
 
 function getLineWiseInterchangeName(station, stations) {

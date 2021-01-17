@@ -2,22 +2,24 @@ import stations from "../../stations";
 import { createGraph, getShortestPath } from "../stationBfs";
 
 describe("stationBfs", () => {
-  describe("createGraph", () => {
-    const STATIONS = {
-      Admiralty: { NS: 1 },
-      Aljunied: { EW: 1 },
-      "Ang Mo Kio": { NS: 2 },
-      "City Hall": { NS: 3, EW: 2 },
-      Bedok: { EW: 3 },
-      Somerset: { NS: 4 },
-      "Raffles Place": { NS: 5, EW: 6 },
-      "Tanah Merah": { EW: 7, CG: 0 },
-      "Changi Airport": { CG: 1 },
-      Phoenix: { BP: [5, 15] },
-      "Jurong East": { NS: 6, EW: 8, JE: 5 },
-      "Choa Chu Kang": { NS: 8, JS: 1, BP: [2, 19] },
-    };
+  const STATIONS = {
+    Admiralty: { NS: 1 },
+    Aljunied: { EW: 1 },
+    "Ang Mo Kio": { NS: 2 },
+    "City Hall": { NS: 3, EW: 2 },
+    Bedok: { EW: 3 },
+    Somerset: { NS: 4 },
+    "Raffles Place": { NS: 5, EW: 6 },
+    "Tanah Merah": { EW: 7, CG: 0 },
+    "Changi Airport": { CG: 1 },
+    Phoenix: { BP: [5, 15] },
+    "Jurong East": { NS: 6, EW: 8, JE: 5 },
+    "Choa Chu Kang": { NS: 8, JS: 1, BP: [2, 19] },
+    "Unreachable station": { US: 1 },
+    "Another Unreachable station": { US: 2 },
+  };
 
+  describe("createGraph", () => {
     it("can create an undirected graph with all the given stations as nodes, with different nodes for same station with more than 1 line", () => {
       const graph = createGraph(STATIONS);
       expect(graph.nodes()).toEqual(
@@ -41,6 +43,8 @@ describe("stationBfs", () => {
           "Bedok",
           "Changi Airport",
           "Phoenix",
+          "Unreachable station",
+          "Another Unreachable station",
         ])
       );
       expect(graph.isDirected()).toEqual(false);
@@ -143,7 +147,16 @@ describe("stationBfs", () => {
 
     it("can return shorter path with more changes if changing weight is default", () => {
       expect(getShortestPath("Expo", "Bugis", stations, 12)).toEqual(
-        expect.objectContaining({ lineOrder: ["CG", "EW"], stops: ["Expo", "Tanah Merah", "Bugis"] })
+        expect.objectContaining({
+          lineOrder: ["CG", "EW"],
+          stops: ["Expo", "Tanah Merah", "Bugis"],
+        })
+      );
+    });
+
+    it("return no path found message if no path possible", () => {
+      expect(getShortestPath("Unreachable station", "Bedok", STATIONS)).toEqual(
+        "Sorry, no path found!"
       );
     });
   });

@@ -1,9 +1,19 @@
+import { Fragment } from "react";
 import PropTypes from "prop-types";
-import { Accordion, Card, Icon } from "semantic-ui-react";
+import { Accordion, Card, Icon, Message } from "semantic-ui-react";
 import { useState } from "react";
 
 const Path = (props) => {
   const [activeIndex, setActiveIndex] = useState(-1);
+  const { path } = props;
+  if (typeof path === "string" || path instanceof String) {
+    return <Message>{path}</Message>;
+  }
+
+  if (path.stops === undefined) {
+    return null;
+  }
+
   const changes = props.path.stops?.length - 2;
   const numberOfStations = props.path.stationsTravelled?.length;
   const handleClick = (e, titleProps) => {
@@ -17,20 +27,18 @@ const Path = (props) => {
       <Card fluid>
         <Card.Header>
           This path is {numberOfStations} mrt stations long with {changes}{" "}
-          changes
+          {changes === 1 ? "change" : "changes"}
         </Card.Header>
-        <Card.Meta>Summary: {props.path.stops?.join(" -> ")}</Card.Meta>
+        <Card.Meta>{props.path.stops?.join(" -> ")}</Card.Meta>
         <Card.Description
           content={
             <Accordion styled>
               {props.path.lineOrder?.map((line, index) => {
                 const lastStop = [...props.path.lineMap[line]].pop();
                 const firstStop = props.path.lineMap[line][0];
-                console.log(props.path.lineMap[line]?.join(", "));
                 return (
-                  <>
+                  <Fragment key={line}>
                     <Accordion.Title
-                      color="green"
                       index={index}
                       key={line}
                       active={activeIndex === index}
@@ -51,7 +59,7 @@ const Path = (props) => {
                     <Accordion.Content active={activeIndex === index}>
                       <p>{props.path.lineMap[line]?.join(" -> ")}</p>
                     </Accordion.Content>
-                  </>
+                  </Fragment>
                 );
               })}
             </Accordion>
@@ -63,12 +71,15 @@ const Path = (props) => {
 };
 
 Path.propTypes = {
-  path: PropTypes.shape({
-    stationsTravelled: PropTypes.arrayOf(PropTypes.string),
-    stops: PropTypes.arrayOf(PropTypes.string),
-    lineMap: PropTypes.object,
-    lineOrder: PropTypes.arrayOf(PropTypes.string),
-  }),
+  path: PropTypes.oneOf([
+    PropTypes.shape({
+      stationsTravelled: PropTypes.arrayOf(PropTypes.string),
+      stops: PropTypes.arrayOf(PropTypes.string),
+      lineMap: PropTypes.object,
+      lineOrder: PropTypes.arrayOf(PropTypes.string),
+    }),
+    PropTypes.string,
+  ]),
 };
 
 Path.defaultProps = {
