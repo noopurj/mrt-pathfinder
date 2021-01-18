@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import Form from "./Form";
-import STATIONS from "./stations";
-import Path from "./Path";
-import { Button, Container, Grid, Message, Radio } from "semantic-ui-react";
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Header,
+  Message,
+  Radio,
+} from "semantic-ui-react";
 import styled from "styled-components";
+import "./App.css";
+import Form from "./components/Form";
+import STATIONS from "./stations";
+import Path from "./components/Path";
 import {
   createGraph,
   getShortestPath,
@@ -12,7 +20,15 @@ import {
 } from "./path/stationBfs";
 
 const AppWrapper = styled(Container)`
-  margin-top: 15px;
+  padding-top: 20px;
+`;
+
+const CustomRadio = styled(Radio)`
+  margin-bottom: 15px;
+`;
+const FormWrapper = styled(Grid.Column)`
+  background: #dfdfdf;
+  border-radius: 3px;
 `;
 
 function App() {
@@ -44,18 +60,22 @@ function App() {
 
   return (
     <AppWrapper>
+      <Header as="h2">MRT Path Finder</Header>
+      <Divider />
       <Grid columns={2}>
-        <Grid.Column>
+        <FormWrapper width={5}>
           <Grid.Row>
-            <Radio
-              label="Give me a path with least stations"
+            <Header as="h5">Find a path with - </Header>
+            <CustomRadio
+              label="least stations"
               name="lineWeightGroup"
               value={1}
               checked={lineChangeWeight === 1}
               onChange={handleChange}
             />
-            <Radio
-              label="Give me a path with least changes in lines"
+            <br />
+            <CustomRadio
+              label="least changes in MRT line"
               name="lineWeightGroup"
               value={15}
               checked={lineChangeWeight === 15}
@@ -80,8 +100,8 @@ function App() {
               onClick={handleClick}
             />
           </Grid.Row>
-        </Grid.Column>
-        <Grid.Column>
+        </FormWrapper>
+        <Grid.Column width={11}>
           {origin && destination && origin === destination ? (
             <Message> You are already where you want to be</Message>
           ) : (

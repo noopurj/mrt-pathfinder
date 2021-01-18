@@ -1,13 +1,23 @@
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Header } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
+import { useMemo } from "react";
+
+const CustomDropDown = styled(Dropdown)`
+  margin-bottom: 25px;
+`;
 
 const Form = (props) => {
   const { stations, setOrigin, setDestination, origin, destination } = props;
-  const options = Object.keys(stations).map((key) => ({
-    key,
-    text: key,
-    value: key,
-  }));
+  const options = useMemo(
+    () =>
+      Object.keys(stations).map((key) => ({
+        key,
+        text: key,
+        value: key,
+      })),
+    []
+  );
 
   const handleChange = (setValue) => (e, { value }) => {
     setValue(value);
@@ -15,7 +25,8 @@ const Form = (props) => {
 
   return (
     <>
-      <Dropdown
+      <Header as="h5">From</Header>
+      <CustomDropDown
         fluid
         value={origin}
         onChange={handleChange(setOrigin)}
@@ -25,7 +36,8 @@ const Form = (props) => {
         options={options}
         selection
       />
-      <Dropdown
+      <Header as="h5">To</Header>
+      <CustomDropDown
         fluid
         value={destination}
         onChange={handleChange(setDestination)}
