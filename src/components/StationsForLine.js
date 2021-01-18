@@ -4,7 +4,7 @@ import { LINE_COLOR_MAP } from "../Constants";
 
 const StationWrapper = styled.ul`
   border-left: 5px solid ${({ color }) => `${color || "white"}`};
-  padding: 0 11px;
+  padding: 0 12px;
   margin: 0 10px;
 `;
 
