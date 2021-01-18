@@ -22,5 +22,4 @@ jobs:
         node-version: '15.x'
     - run: yarn
     - run: yarn test
-    - run: yarn build
     - run: yarn deploy
