@@ -5,6 +5,60 @@ function isInterchange(station, stations) {
   return Object.keys(stations[station]).length > 1;
 }
 
+function getLineWiseInterchangeName(station, stations) {
+  const result = [];
+  if (isInterchange(station, stations)) {
+    Object.keys(stations[station]).forEach((line) =>
+      result.push(`${station}-${line}`)
+    );
+  } else {
+    result.push(station);
+  }
+  return result;
+}
+
+const edgeFunction = (graph) => (v) => graph.nodeEdges(v);
+
+function constructPath(pathMap, source, destination, graph) {
+  const stationsTravelled = [];
+  const lineOrder = [];
+  const lineMap = {};
+  let previousStop = destination;
+  while (previousStop !== source) {
+    const previousStopWithoutLine = previousStop.split("-")[0];
+    if (!stationsTravelled.includes(previousStopWithoutLine)) {
+      stationsTravelled.push(previousStopWithoutLine);
+    }
+    const line = graph.edge(previousStop, pathMap[previousStop].predecessor);
+    if (line !== undefined) {
+      if (!lineOrder.includes(line)) {
+        lineOrder.push(line);
+      }
+      const lineStationList = lineMap[line] || [];
+      lineStationList.unshift(previousStopWithoutLine);
+      previousStop = pathMap[previousStop].predecessor;
+      if (previousStop === source) {
+        lineStationList.unshift(previousStop.split("-")[0]);
+      }
+      lineMap[line] = lineStationList;
+    } else {
+      previousStop = pathMap[previousStop].predecessor;
+    }
+  }
+  stationsTravelled.push(source.split("-")[0]);
+  stationsTravelled.reverse();
+  lineOrder.reverse();
+  const stops = [source.split("-")[0]];
+  lineOrder.forEach((line) => stops.push([...lineMap[line]].pop()));
+  for (let i = 1; i < stops.length - 1; i++) {
+    const previousLineStations = lineMap[lineOrder[i - 1]];
+    const lastStopOfPreviousLine =
+      previousLineStations[previousLineStations.length - 1];
+    lineMap[lineOrder[i]].unshift(lastStopOfPreviousLine);
+  }
+  return { lineMap, lineOrder, stationsTravelled, stops };
+}
+
 export function createGraph(stations, lineChangeWeight = 1) {
   const graph = new Graph({ directed: false, multigraph: true });
   const orderedStationsByLine = orderedLines(stations);
@@ -66,60 +120,6 @@ export function setLineChangeWeight(graph, stations, lineChangeWeight) {
       );
     }
   });
-}
-
-function getLineWiseInterchangeName(station, stations) {
-  const result = [];
-  if (isInterchange(station, stations)) {
-    Object.keys(stations[station]).forEach((line) =>
-      result.push(`${station}-${line}`)
-    );
-  } else {
-    result.push(station);
-  }
-  return result;
-}
-
-const edgeFunction = (graph) => (v) => graph.nodeEdges(v);
-
-function constructPath(pathMap, source, destination, graph) {
-  const stationsTravelled = [];
-  const lineOrder = [];
-  const lineMap = {};
-  let previousStop = destination;
-  while (previousStop !== source) {
-    const previousStopWithoutLine = previousStop.split("-")[0];
-    if (!stationsTravelled.includes(previousStopWithoutLine)) {
-      stationsTravelled.push(previousStopWithoutLine);
-    }
-    const line = graph.edge(previousStop, pathMap[previousStop].predecessor);
-    if (line !== undefined) {
-      if (!lineOrder.includes(line)) {
-        lineOrder.push(line);
-      }
-      const lineStationList = lineMap[line] || [];
-      lineStationList.unshift(previousStopWithoutLine);
-      previousStop = pathMap[previousStop].predecessor;
-      if (previousStop === source) {
-        lineStationList.unshift(previousStop.split("-")[0]);
-      }
-      lineMap[line] = lineStationList;
-    } else {
-      previousStop = pathMap[previousStop].predecessor;
-    }
-  }
-  stationsTravelled.push(source.split("-")[0]);
-  stationsTravelled.reverse();
-  lineOrder.reverse();
-  const stops = [source.split("-")[0]];
-  lineOrder.forEach((line) => stops.push([...lineMap[line]].pop()));
-  for (let i = 1; i < stops.length - 1; i++) {
-    const previousLineStations = lineMap[lineOrder[i - 1]];
-    const lastStopOfPreviousLine =
-      previousLineStations[previousLineStations.length - 1];
-    lineMap[lineOrder[i]].unshift(lastStopOfPreviousLine);
-  }
-  return { lineMap, lineOrder, stationsTravelled, stops };
 }
 
 export function getShortestPath(
