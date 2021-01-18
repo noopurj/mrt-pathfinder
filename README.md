@@ -20,9 +20,10 @@ navigate to http://localhost:3000
 ## Assumptions 
 1. Distance between 2 consecutive mrt stations on any line (or the time taken to travel between them, can be referred to as "cost") is assumed to be the same. For example travel time from Jurong East to Clementi on the EW line is the same as travelling from Dakota to Mountbatten on the CC line.
 2. This means cost of travelling 1 station in any direction on any given line is 1.
-2. The cost of changing lines at an interchange (station that is on more than 1 line) is the same as travelling a distance of 1 station on any line for finding a path with least stations.
-3. The cost of changing lines is changed to 15 for finding a path with least number of changes.
+3. The cost of changing lines at an interchange (station that is on more than 1 line) is the same as travelling a distance of 1 station on any line for finding a path with least stations.
+4. The cost of changing lines is changed to 15 for finding a path with least number of changes.
 
 ## Improvements 
 1. Cost between consecutive stations which are farther away can be higher
-3. Cost of changing lines can be different for different interchanges depending on walking involved.
+2. Cost of changing lines can be different for different interchanges depending on walking involved.
+3. Group station dropdown by line for easier selection
