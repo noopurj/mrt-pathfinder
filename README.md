@@ -1,5 +1,5 @@
 # MRT Path Finder
- Live Demo hosted on github pages
+ [Live Demo](https://noopurj.github.io/mrt-pathfinder/) hosted on github pages
 
 ## Usage
 1. Choose an origin mrt station
