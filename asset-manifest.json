@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/mrt-pathfinder/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/mrt-pathfinder/static/js/main.db89b8f4.chunk.js",
+    "main.js.map": "/mrt-pathfinder/static/js/main.db89b8f4.chunk.js.map",
+    "runtime-main.js": "/mrt-pathfinder/static/js/runtime-main.38e1bd6c.js",
+    "runtime-main.js.map": "/mrt-pathfinder/static/js/runtime-main.38e1bd6c.js.map",
+    "static/css/2.84f38124.chunk.css": "/mrt-pathfinder/static/css/2.84f38124.chunk.css",
+    "static/js/2.64560e13.chunk.js": "/mrt-pathfinder/static/js/2.64560e13.chunk.js",
+    "static/js/2.64560e13.chunk.js.map": "/mrt-pathfinder/static/js/2.64560e13.chunk.js.map",
+    "static/js/3.e723a74b.chunk.js": "/mrt-pathfinder/static/js/3.e723a74b.chunk.js",
+    "static/js/3.e723a74b.chunk.js.map": "/mrt-pathfinder/static/js/3.e723a74b.chunk.js.map",
+    "index.html": "/mrt-pathfinder/index.html",
+    "static/css/2.84f38124.chunk.css.map": "/mrt-pathfinder/static/css/2.84f38124.chunk.css.map",
+    "static/css/main.8c8b27cf.chunk.css.map": "/mrt-pathfinder/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.64560e13.chunk.js.LICENSE.txt": "/mrt-pathfinder/static/js/2.64560e13.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/mrt-pathfinder/static/media/outline-icons.ddae9b1b.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.38e1bd6c.js",
+    "static/css/2.84f38124.chunk.css",
+    "static/js/2.64560e13.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.db89b8f4.chunk.js"
+  ]
+}
